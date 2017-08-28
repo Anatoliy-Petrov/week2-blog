@@ -9,11 +9,11 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
+    }
+
     public function index()
     {
         $posts = Post::latest()->get();
@@ -38,22 +38,40 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request  $request)
     {
+
         $this->validate(request(),[
 
             'title'=>'required',
             'body'=>'required'
         ]);
 
-        Post::create([
+        if($request->hasFile('images')){
+
+            $file = $request->file('images');
+
+            $input['images'] = $file->getClientOriginalName();
+
+            $file->move(public_path().'/img', $input['images']);
+        }
+
+        $post = new Post;
+
+        if(
+        $post->create([
 
             'title'=>request('title'),
             'body' => request('body'),
-            'user_id' => auth()->id()
-        ]);
+            'user_id' => auth()->id(),
+            'image' => isset($input['images']) ? $input['images'] : ''
+        ])
+        ){
+            return redirect('/post')->with('status', 'Страница создана');
+        }
+        return redirect('/post')->with('status', 'упс что-то пошло не так');
 
-        return redirect('/posts');
+
     }
 
     /**
@@ -79,7 +97,13 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+
+
+        $post = Post::find($id);
+
+        //dd($post);
+
+        return view('layouts.edit', compact('post'));
     }
 
     /**
@@ -91,7 +115,45 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $input = $request;
+
+        $post = Post::find($id);
+
+        ///dd($post);
+
+        $this->validate(request(),[
+
+            'title'=>'required',
+            'body'=>'required',
+            'images' => 'image'
+        ]);
+
+        if($request->hasFile('images')){
+
+            $file = $request->file('images');
+            $file->move(public_path().'/img', $file->getClientOriginalName());
+            $image = $file->getClientOriginalName();
+        }
+        else {
+
+            $image = $post->image;
+        }
+        //unset($input['old_images']);
+
+        //$post->fill($input);
+        $post->title = $input->title;
+        $post->body = $input->body;
+        $post->image = $image;
+
+        if($post->update()){
+
+            return redirect('/post')->with('status', 'страница отредактирована');
+        }
+
+        return redirect('/post')->with('status', 'упс что-то пошло не так');
+
+
+
     }
 
     /**
@@ -103,15 +165,9 @@ class PostController extends Controller
     public function destroy($id)
     {
         //
+        Post::find($id)->delete();
+
+        return redirect('/post')->with('status', 'Страница удалена.');
     }
 
-    public function upload(Request $request)
-    {
-        foreach ($request->file() as $file) {
-            foreach ($file as $f) {
-                $f->move(storage_path('images'), time().'_'.$f->getClientOriginalName());
-            }
-        }
-        return "Успех";
-    }
 }
