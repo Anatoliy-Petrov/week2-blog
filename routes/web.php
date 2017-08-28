@@ -21,14 +21,12 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::get('/posts', 'PostController@index');
+/*Route::get('/posts', 'PostController@index')->name('posts');
 
-Route::get('/posts/create', 'PostController@create');
-Route::get('/posts/{post}', 'PostController@show');
-Route::post('/posts', 'PostController@store');
+Route::get('/posts/create', 'PostController@create')->name('createPost');
+Route::get('/posts/{post}', 'PostController@show')->name('showPost');
+Route::post('/posts', 'PostController@store')->name('storePost');*/
 
-Route::get('user', function(User $user){
+//Route::get('/post/{id}/edit', 'Postcontroller@edit');
 
-    $user1 = $user->id;
-    dd($user1);
-});
+Route::resource('post', 'PostController');
