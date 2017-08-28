@@ -24,15 +24,25 @@
 
 <div class="container">
 
-    @include('layouts.nav')
+    <div class="flex-center position-ref full-height">
+        @if (Route::has('login'))
+            <div class="top-right links">
+                @if (Auth::check())
+                    <a href="{{ url('/home') }}" class="btn btn-primary btn-sm">Home</a>
+                @else
+                    <a href="{{ url('/login') }}" class="btn btn-primary btn-sm">Login</a>
+                    <a href="{{ url('/register') }}" class="btn btn-primary btn-sm">Register</a>
+                @endif
+            </div>
+        @endif
+    </div>
 
-    <div class="row">
+    {{--@include('layouts.nav')--}}
 
-        @yield('content')
-
-    </div><!-- /.row -->
+    @yield('content')
 
 </div><!-- /.container -->
-<script src="/js/dropzone.js"></script>
+<script src="/js/ckeditor/ckeditor.js"></script>
+<script src="/js/bootstrap-filestyle.min.js"></script>
 </body>
 </html>
