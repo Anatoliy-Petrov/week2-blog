@@ -38,9 +38,8 @@
                     <div class="panel-heading">
                         <div class="level">
                             <span class="flex">
-                                {{--<a href="{{ route('profile', $thread->user) }}">{{ $thread->user->name }}</a>--}}
-                        posted: <br>
-                                {{ $post->title }}
+                                <h2>{{ $post->title }}</h2>
+
                             </span>
 
                             {{--@can('update', $thread)
@@ -59,6 +58,14 @@
                             <img src="{{ asset('/img/'.$post->image) }}" alt="{{ $post->title }}" class="post-image">
                         </p>
                         {!! $post->body !!}
+                        <div>
+                            {{--<form method="post" action="/post/{{$post->id}}">
+                                {{ csrf_field() }}
+                                <button type="submit" class="btn btn-default" {{ $reply->isFavorited() ? 'disabled' : '' }}>
+                                    {{ $reply->favorites_count }} {{ str_plural('favorite', $reply->favorites_count) }}
+                                </button>
+                            </form>--}}
+                        </div>
 
                     </div>
                 </div>
@@ -87,6 +94,13 @@
                             пользователем <a href="#">{{ $post->user->name }}</a><br>
                             {{--has {{ $thread->replies_count }} {{ str_plural('comment', $thread->replies_count) }}--}}
                         </p>
+
+                        @if(Auth::check())
+                            @if(!$post->isLiked())
+                                @include('layouts.like')
+                            @else @include('layouts.unlike')
+                            @endif
+                        @endif
                     </div>
                 </div>
             </div>

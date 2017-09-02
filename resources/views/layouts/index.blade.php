@@ -91,15 +91,23 @@
                             <div class="panel-body">
                                 <div class="body">{!! $post->body !!}</div>
                                 <hr>
-                                <div>
-                                    {{--{!! Html::link(route('post.show',['id'=>$post->id]),'читать',['alt'=>$post->title, 'class'=>'btn btn-primary btn-lg']) !!}--}}
-                                    <a href="{{ route('post.show', ['id' => $post->id]) }}" class="btn btn-primary">
-                                        читать
-                                    </a>
-                                    {{--{!! Html::link(route('post.edit',['id'=>$post->id]),'редактировать',['alt'=>$post->title, 'class'=>'btn btn-default btn-lg']) !!}--}}
+                                <div class="level">
+                                    <span class="flex">
+                                        <a href="{{ route('post.show', ['id' => $post->id]) }}" class="btn btn-primary">
+                                            читать
+                                        </a>
                                     <a href="{{ route('post.edit',['id' => $post->id]) }}" class="btn btn-default">
                                         редактировать
                                     </a>
+                                    </span>
+
+                                    <div>
+                                        <form method="post" action="{{ route('post.destroy', ['post'=>$post->id]) }}">
+                                            {{ method_field('DELETE') }}
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn btn-danger">удалить</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
