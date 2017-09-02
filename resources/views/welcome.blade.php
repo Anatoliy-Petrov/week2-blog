@@ -81,6 +81,11 @@
                 <div class="title m-b-md">
                     Laravel
                 </div>
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
 
                 <div class="links">
                     <h1><a href="/post">Блог</a></h1>
