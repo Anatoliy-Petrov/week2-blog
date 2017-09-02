@@ -12,6 +12,7 @@
 */
 
 Route::get('/', function () {
+
     return view('welcome');
 });
 
@@ -20,3 +21,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('post', 'PostController');
+
+Route::post('/post/{post}/likes', 'LikeController@store');
+Route::delete('/post/{post}/likes', 'LikeController@destroy');
