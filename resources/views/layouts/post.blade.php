@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+{{--@extends('layouts.layout')
 
 @section('content')
 
@@ -15,15 +15,81 @@
         </div>
 
         <p>
-            {!! Html::image('img/'.$post->image,'title_image', array('class'=>'rounded', 'width'=>'250', 'height'=>'200')) !!}
+            <img src="{{ asset('/img/'.$post->image) }}" alt="{{ $post->title }}" class="post-image">
         </p>
         <p>
             {!! $post->body !!}
         </p>
-        <p>
+        --}}{{--<p>
             {{ $post->image }}
-        </p>
+        </p>--}}{{--
     </div>
 
 
+@endsection--}}
+
+@extends('layouts.app')
+
+@section('content')
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="level">
+                            <span class="flex">
+                                {{--<a href="{{ route('profile', $thread->user) }}">{{ $thread->user->name }}</a>--}}
+                        posted: <br>
+                                {{ $post->title }}
+                            </span>
+
+                            {{--@can('update', $thread)
+                            <form action="{{ $thread->path() }}" method="post">
+                                {{ csrf_field() }}
+                                {{ method_field('DELETE') }}
+                                <button type="submit" class="btn btn-danger">delete thread</button>
+                            </form>
+                            @endcan--}}
+
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        <p>
+                            <img src="{{ asset('/img/'.$post->image) }}" alt="{{ $post->title }}" class="post-image">
+                        </p>
+                        {!! $post->body !!}
+
+                    </div>
+                </div>
+
+                {{--@foreach($replies as $reply)
+                    @include('threads.reply')
+                @endforeach
+                {{ $replies->links() }}--}}
+
+                {{--@if(auth()->check())
+                    <form method="post" action="{{$thread->path().'/replies'}}" class="form">
+                        {{ csrf_field() }}
+                        <div class="form-group">
+                            <textarea name="body" id="body" rows="4" class="form-control" placeholder="хотите что-то сказать?">{{ old('body') }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">опубликовать</button>
+                    </form>
+                @else <p class="text-center">Пожалуйста <a href="{{route('login')}}">авторизуйтесь</a> для добавления комментария.</p>
+                @endif--}}
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>
+                            Пост был опубликован {{ $post->created_at->diffForHumans() }}<br>
+                            пользователем <a href="#">{{ $post->user->name }}</a><br>
+                            {{--has {{ $thread->replies_count }} {{ str_plural('comment', $thread->replies_count) }}--}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

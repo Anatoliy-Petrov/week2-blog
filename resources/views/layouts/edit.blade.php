@@ -1,57 +1,44 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('content')
 
-    <div class="wrapper container-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3>редактирование поста</h3></div>
+                    <div class="panel-body">
+                        <form action="{{ route('post.update', ['id'=>$post->id]) }}" enctype="multipart/form-data" method="post">
+                            {{ method_field('PUT') }}
+                            {{ csrf_field() }}
+                            <div class="form-group">
+                                <label for="title">Заголовок поста: </label>
+                                <input type="text" id="title" class="form-control" name="title" value="{{ $post->title }}" required placeholder="Введите название страницы">
+                            </div>
+                            <div class="form-group">
+                                <label for="body">текст поста: </label>
+                                <textarea name="body" id="editor" class="form-control" placeholder="введите описание" required>{{ $post->body }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="images">выберите изображение</label>
+                                <input type="file" class="filestyle" name="images">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">сохранить</button>
+                            </div>
+                        </form>
 
-        {!! Form::open(['url' => route('post.update', ['id'=>$post->id]),'class'=>'form-horizontal','method'=>'POST','enctype'=>'multipart/form-data']) !!}
-
-        {{ method_field('PUT') }}
-
-        {{--{{ csrf_field() }}--}}
-
-        <div class="form-group">
-
-            {!! Form::label('title','Заголовок',['class' => 'col-xs-2 control-label'])   !!}
-            <div class="col-xs-8">
-                {!! Form::text('title',$post->title,['class' => 'form-control','placeholder'=>'Введите название страницы'])!!}
-            </div>
-
-        </div>
-
-        <div class="form-group">
-            {!! Form::label('body', 'Текст:',['class'=>'col-xs-2 control-label']) !!}
-            <div class="col-xs-8">
-                {!! Form::textarea('body', $post->body, ['id'=>'editor','class' => 'form-control','placeholder'=>'Введите текст страницы']) !!}
-            </div>
-        </div>
-
-        <div class="form-group">
-            {!! Form::label('images', 'Изображение:',['class'=>'col-xs-2 control-label']) !!}
-            <div class="col-xs-8">
-                {!! Form::file('images', ['class' => 'filestyle','data-buttonText'=>'Выберите изображение','data-buttonName'=>"btn-primary",'data-placeholder'=>"Файла нет"]) !!}
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <div class="col-xs-offset-2 col-xs-10">
-                {!! Form::button('Сохранить', ['class' => 'btn btn-primary','type'=>'submit']) !!}
+                    </div>
+                </div>
             </div>
         </div>
-
-
-
-        {!! Form::close() !!}
-
     </div>
 
-            @include('layouts.error')
+    @include('layouts.error')
 
-{{--        </form>
-    </div>--}}
-    <script src="/js/ckeditor/ckeditor.js"></script>
-    <script src="/js/bootstrap-filestyle.min.js"></script>
+    <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-filestyle.min.js') }}"></script>
+
     <script>
         CKEDITOR.replace('editor');
     </script>

@@ -17,12 +17,12 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="/css/blog.css" rel="stylesheet">
+    {{--<link href="/css/blog.css" rel="stylesheet">--}}
 </head>
 
 <body>
-
-<div class="container">
+@include('layouts.nav')
+{{--<div class="container">
 
     <div class="flex-center position-ref full-height">
         @if (Route::has('login'))
@@ -37,12 +37,14 @@
         @endif
     </div>
 
-    {{--@include('layouts.nav')--}}
+    --}}{{--@include('layouts.nav')--}}{{--
 
-    @yield('content')
 
-</div><!-- /.container -->
-<script src="/js/ckeditor/ckeditor.js"></script>
-<script src="/js/bootstrap-filestyle.min.js"></script>
+
+</div><!-- /.container -->--}}
+@yield('content')
+{{--<script src="/js/ckeditor/ckeditor.js"></script>
+<script src="/js/bootstrap-filestyle.min.js"></script>--}}
+<script src="{{ asset('/js/bootstrap-filestyle.min.js') }}"></script>
 </body>
 </html>
