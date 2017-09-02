@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -16,9 +17,14 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::latest()->get();
+        if($posts = Post::latest()->get()){
 
-        return view('layouts.index', compact('posts'));
+            return view('layouts.index', compact('posts'));
+        };
+
+        return redirect('/')->with('status', 'Постов пока нет.');
+
+
     }
 
     /**
@@ -44,14 +50,15 @@ class PostController extends Controller
         $this->validate(request(),[
 
             'title'=>'required',
-            'body'=>'required'
+            'body'=>'required',
+            'images' => 'image'
         ]);
 
         if($request->hasFile('images')){
 
             $file = $request->file('images');
 
-            $input['images'] = $file->getClientOriginalName();
+            $input['images'] = rand(0, 100).date("Ymdhis").$file->getClientOriginalName();
 
             $file->move(public_path().'/img', $input['images']);
         }
@@ -80,12 +87,8 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id/*Post $post*/)
+    public function show(Post $post)
     {
-        //
-        $post = Post::find($id);
-
-
         return view('layouts.post', compact('post'));
     }
 
@@ -97,13 +100,18 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-
-
         $post = Post::find($id);
 
-        //dd($post);
+        if($post->likes->count() == 0){
+            return back()->with('status', 'лайкайте быстрее, будете первым');
+        }
 
-        return view('layouts.edit', compact('post'));
+        if($post->canEdit() == auth()->id()){
+
+            return view('layouts.edit', compact('post'));
+        }
+
+        return back()->with('status', 'Упс... кто-то лайкнул раньше вас(');
     }
 
     /**
@@ -117,9 +125,9 @@ class PostController extends Controller
     {
         $input = $request;
 
-        $post = Post::find($id);
-
-        ///dd($post);
+        if(!$post = Post::find($id)){
+            return redirect('/post')->with('status', 'такого поста нет.');
+        }
 
         $this->validate(request(),[
 
@@ -131,16 +139,15 @@ class PostController extends Controller
         if($request->hasFile('images')){
 
             $file = $request->file('images');
-            $file->move(public_path().'/img', $file->getClientOriginalName());
-            $image = $file->getClientOriginalName();
+            $newImage = rand(0, 100).date("Ymdhis").$file->getClientOriginalName();
+            $file->move(public_path().'/img', $newImage);
+            $image = $newImage;
         }
         else {
 
             $image = $post->image;
         }
-        //unset($input['old_images']);
 
-        //$post->fill($input);
         $post->title = $input->title;
         $post->body = $input->body;
         $post->image = $image;
@@ -149,25 +156,18 @@ class PostController extends Controller
 
             return redirect('/post')->with('status', 'страница отредактирована');
         }
-
         return redirect('/post')->with('status', 'упс что-то пошло не так');
-
-
-
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
-        Post::find($id)->delete();
+        $post = Post::findOrFail($id);
 
-        return redirect('/post')->with('status', 'Страница удалена.');
+        if($post->user_id == auth()->id()){
+
+            $post->delete();
+            return redirect('/post')->with('status', 'Страница удалена.');
+        }
+        return redirect('/post')->with('status', 'Это не вы писали!! что вы делаете?.');
     }
-
 }
