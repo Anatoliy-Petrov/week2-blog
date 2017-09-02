@@ -29,24 +29,15 @@
                         </form>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
-
-
     </div>
 
     @include('layouts.error')
 
-    {{--        </form>
-        </div>--}}
-    {{--<script src="/js/ckeditor/ckeditor.js"></script>--}}
     <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('js/bootstrap-filestyle.min.js') }}"></script>
 
-    {{--<script src="/js/bootstrap-filestyle.min.js"></script>--}}
     <script>
         CKEDITOR.replace('editor');
     </script>

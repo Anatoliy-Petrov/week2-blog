@@ -24,23 +24,10 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Посты <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('post.index') }}">все посты</a></li>
-                        {{--@if(auth()->check())
-                            <li><a href="/threads?by={{ auth()->user()->name }}">мои темы</a></li>
-                        @endif
-                        <li><a href="/threads?popular=1">популярные темы</a></li>--}}
                     </ul>
                 </li>
 
                 <li><a href="{{ route('post.create') }}">новый пост</a></li>
-                {{--<li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Channels <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        --}}{{--@foreach($channels as $channel)
-                            <li><a href="/threads/{{$channel->slug}}">{{ $channel->name }}</a></li>
-                        @endforeach--}}{{--
-
-                    </ul>
-                </li>--}}
             </ul>
 
             <!-- Right Side Of Navbar -->
@@ -56,9 +43,6 @@
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a href="#{{--{{ route('profile', Auth::user()) }}--}}">my profile</a>
-                            </li>
                             <li>
                                 <a href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
