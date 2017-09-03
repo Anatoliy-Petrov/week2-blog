@@ -103,7 +103,8 @@ class PostController extends Controller
         $post = Post::find($id);
 
         if($post->likes->count() == 0){
-            return back()->with('status', 'лайкайте быстрее, будете первым');
+            return back()
+                ->with(['status' => 'лайкайте быстрее, будете первым', 'class' => 'info']);
         }
 
         if($post->canEdit() == auth()->id()){
@@ -111,7 +112,8 @@ class PostController extends Controller
             return view('layouts.edit', compact('post'));
         }
 
-        return back()->with('status', 'Упс... кто-то лайкнул раньше вас(');
+        return back()
+            ->with(['status' => 'Упс... кто-то лайкнул раньше вас(', 'class' => 'info']);
     }
 
     /**
@@ -126,7 +128,8 @@ class PostController extends Controller
         $input = $request;
 
         if(!$post = Post::find($id)){
-            return redirect('/post')->with('status', 'такого поста нет.');
+            return redirect('/post')
+                ->with(['status' => 'такого поста нет.', 'class' => 'warning']);
         }
 
         $this->validate(request(),[
@@ -154,9 +157,11 @@ class PostController extends Controller
 
         if($post->update()){
 
-            return redirect('/post')->with('status', 'страница отредактирована');
+            return redirect('/post')
+                ->with(['status' => 'страница отредактирована', 'class' => 'success']);
         }
-        return redirect('/post')->with('status', 'упс что-то пошло не так');
+        return redirect('/post')
+            ->with(['status' => 'упс что-то пошло не так', 'class' => 'warning']);
     }
 
     public function destroy($id)
@@ -166,8 +171,10 @@ class PostController extends Controller
         if($post->user_id == auth()->id()){
 
             $post->delete();
-            return redirect('/post')->with('status', 'Страница удалена.');
+            return redirect('/post')
+                ->with(['status' => 'Страница удалена.', 'class' => 'success']);
         }
-        return redirect('/post')->with('status', 'Это не вы писали!! что вы делаете?.');
+        return redirect('/post')
+            ->with(['status' => 'Это не вы писали!! что вы делаете?.', 'class' => 'warning']);
     }
 }
