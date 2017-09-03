@@ -74,9 +74,11 @@ class PostController extends Controller
             'image' => isset($input['images']) ? $input['images'] : ''
         ])
         ){
-            return redirect('/post')->with('status', 'Страница создана');
+            return redirect('/post')
+                ->with(['status' => 'Страница создана', 'class' => 'success']);
         }
-        return redirect('/post')->with('status', 'упс что-то пошло не так');
+        return redirect('/post')
+            ->with(['status' => 'упс что-то пошло не так', 'class' => 'warning']);
 
 
     }
