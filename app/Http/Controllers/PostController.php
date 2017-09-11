@@ -10,10 +10,13 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    public $keyWords = ['focus', 'development', 'criminal', 'police', 'alcohol', 'cucumber', 'pasta', 'its'];
+
     public function __construct()
     {
         $this->middleware('auth')->except(['index', 'show']);
     }
+
 
     public function index()
     {
@@ -46,6 +49,8 @@ class PostController extends Controller
      */
     public function store(Request  $request)
     {
+        /*$done = $this->prepareText($request);
+        dd($done);*/
 
         $this->validate(request(),[
 
@@ -63,13 +68,15 @@ class PostController extends Controller
             $file->move(public_path().'/img', $input['images']);
         }
 
+        $preparedText = $this->prepareText($request);
+
         $post = new Post;
 
         if(
         $post->create([
 
             'title'=>request('title'),
-            'body' => request('body'),
+            'body' => $preparedText,
             'user_id' => auth()->id(),
             'image' => isset($input['images']) ? $input['images'] : ''
         ])
@@ -178,5 +185,21 @@ class PostController extends Controller
         }
         return redirect('/post')
             ->with(['status' => 'Это не вы писали!! что вы делаете?.', 'class' => 'warning']);
+    }
+
+    public function prepareText(Request $request)
+    {
+        $words = preg_split("/[\s,.?!:;']+/", $request->body);
+
+        foreach ($words as $word) {
+
+            if(in_array($word, $this->keyWords)){
+
+                for ( $i = 1; $i < strlen ($word) - 1; $i++ ) $word{$i} = '*';
+            }
+
+            $preparedText[] = $word;
+        }
+        return implode(" ", $preparedText);
     }
 }
